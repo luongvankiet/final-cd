@@ -3,17 +3,20 @@ package com.finalproject.Auth;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 import com.finalproject.DbConnector;
-import com.finalproject.Model.User.Role;
-import com.finalproject.Model.User.User;
-import com.finalproject.Model.User.UserDAO;
+import com.finalproject.Role.*;
+import com.finalproject.User.*;
 
 public class Auth {
-
-	public static User login(String username, String password) {
+	private DbConnector dConn = new DbConnector();
+	private RoleDAO rDao = new RoleDAO();
+	
+	public User login(String username, String password) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -23,26 +26,28 @@ public class Auth {
 
 			String pwd = PasswordEncryptor.encrypt(password);
 			String sql = "SELECT * FROM users WHERE users.username = ? AND users.password = ?";
-			conn = DbConnector.connectDB();
+			conn = dConn.connectDB();
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, username);
 			ps.setString(2, pwd);
 			rs = ps.executeQuery();
 			if(rs.next()) {
-				
-				rList = UserDAO.getRoleByUserId(rs.getInt("user_id"));
+
+				DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+				String created_at = df.format(rs.getTimestamp("created_at"));
+				String updated_at = df.format(rs.getTimestamp("updated_at"));
+				rList = rDao.getRoleByUserId(rs.getInt("id"));
 				if(username.equals(rs.getString("username")) && pwd.equals(rs.getString("password"))) {
-					u = new User(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"), 
-							rs.getString("token"), rList);
+					u = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("token"), 
+							rList, created_at, updated_at);
 				}
-				System.out.println(u.getUsername());
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbConnector.closeConnection(conn);
-			DbConnector.closePreparedStatement(ps);
-			DbConnector.closeResultSet(rs);
+			dConn.closeConnection(conn);
+			dConn.closePreparedStatement(ps);
+			dConn.closeResultSet(rs);
 		}
 		return u;
 	}

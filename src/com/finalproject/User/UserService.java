@@ -1,4 +1,4 @@
-package com.finalproject.Services;
+package com.finalproject.User;
 
 import java.util.*;
 
@@ -8,16 +8,20 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 
 import com.finalproject.Auth.PasswordEncryptor;
-import com.finalproject.Model.User.*;
+import com.finalproject.Role.Role;
+import com.finalproject.Role.RoleDAO;
 
 @Path("secured")
 public class UserService {
+	private UserDAO uDao = new UserDAO();
+	private RoleDAO rDao = new RoleDAO();
+	
 	@GET
 	@Path("/users")
-	@RolesAllowed({"user", "admin"})
+	@RolesAllowed({"staff", "admin"})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Response getAllUsers() {
-		List<User> uList = UserDAO.getAllUser();
+		List<User> uList = uDao.getAllUser();
 		if(uList.size() > 0)
 			return Response.status(Status.OK.getStatusCode()).entity(uList).build();
 		return Response.status(Status.NOT_FOUND.getStatusCode()).entity("User list is empty").build();
@@ -28,10 +32,10 @@ public class UserService {
 	@Path("/users/{id}")
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public List<Role> getRoleByUserID(@PathParam("id") int id) {
-		return UserDAO.getRoleByUserId(id);
+		return rDao.getRoleByUserId(id);
 	}
 	
-	@RolesAllowed({"user", "admin"})
+	@RolesAllowed({"staff", "admin"})
 	@GET
 	@Path("/test")
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})

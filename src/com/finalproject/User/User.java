@@ -1,23 +1,27 @@
-package com.finalproject.Model.User;
+package com.finalproject.User;
 
 import java.util.*;
 import org.codehaus.jackson.annotate.*;
-@JsonIgnoreProperties("password")
+
+import com.finalproject.Role.Role;
 public class User {
 	private int userId;
 	private String username;
-	@JsonIgnore
 	private String password; 
 	private String token;
 	private List<Role> roles;
+	private String created_at;
+	private String updated_at;
 	
 	public User() {}
-	public User(int userId, String username, String password, String token, List<Role> roles) {
+	public User(int userId, String username, String password, String token, List<Role> roles, String created_at, String updated_at) {
 		this.setUserId(userId);
 		this.setUsername(username);
 		this.setPassword(password);
 		this.setRoles(roles);
 		this.setToken(token);
+		this.setCreated_at(created_at);
+		this.setUpdated_at(updated_at);
 	}
 	/**
 	 * @return the userId
@@ -76,5 +80,17 @@ public class User {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public String getCreated_at() {
+		return created_at;
+	}
+	public void setCreated_at(String created_at) {
+		this.created_at = created_at;
+	}
+	public String getUpdated_at() {
+		return updated_at;
+	}
+	public void setUpdated_at(String updated_at) {
+		this.updated_at = updated_at;
 	}
 }

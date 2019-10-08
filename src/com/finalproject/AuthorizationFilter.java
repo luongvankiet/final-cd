@@ -11,9 +11,8 @@ import javax.ws.rs.ext.Provider;
 import org.glassfish.jersey.internal.util.Base64;
 
 import com.finalproject.Auth.PasswordEncryptor;
-import com.finalproject.Model.User.Role;
-import com.finalproject.Model.User.User;
-import com.finalproject.Model.User.UserDAO;
+import com.finalproject.Role.*;
+import com.finalproject.User.*;
 
 @Provider
 public class AuthorizationFilter implements ContainerRequestFilter{
@@ -23,6 +22,8 @@ public class AuthorizationFilter implements ContainerRequestFilter{
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
     private static final String PATH = "secured";
+    private UserDAO uDao = new UserDAO();
+    
     @Override
     public void filter(ContainerRequestContext requestContext)
     {
@@ -90,7 +91,7 @@ public class AuthorizationFilter implements ContainerRequestFilter{
     private boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) throws Exception
     {
         boolean isAllowed = false;
-    	List<User> uList = UserDAO.getAllUser();
+    	List<User> uList = uDao.getAllUser();
 
     	for(User u: uList) {
     		String decodedPwd = PasswordEncryptor.decrypt(u.getPassword());

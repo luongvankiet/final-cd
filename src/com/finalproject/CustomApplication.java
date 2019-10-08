@@ -8,5 +8,6 @@ public class CustomApplication extends ResourceConfig {
 	        packages("com.finalproject");
 	        //Register Auth Filter here
 	        register(AuthorizationFilter.class);
+	        register(CORSFilter.class);
 	    }
 }

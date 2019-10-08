@@ -10,10 +10,6 @@
 		org.glassfish.jersey.servlet.ServletContainer
 	</servlet-class>
     <init-param>
-      <param-name>jersey.config.server.provider.packages</param-name>
-      <param-value>com.finalproject</param-value>
-    </init-param>
-    <init-param>
       <param-name>jersey.config.server.provider.CORSFilter</param-name>
       <param-value>com.finalproject.CorsResponseFilter</param-value>
     </init-param>
